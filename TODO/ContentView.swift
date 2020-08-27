@@ -9,53 +9,47 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State var checklistItems = ["Walk the dog", "Brush my teeth", "Learn iOS development", "Soccer practice", "Eat ice cream",]
+    
     var body: some View {
         NavigationView{
             
         List{
-            
-            Section(header: Text("High Priority")){
-                
-                Group{
-            Text("Walk The Dog")
-            Text("Brush my teeth")
-            Text("Learn iOS development")
-            Text("Make Dinner")
-            Text("Do Laundry")
-            Text("Pay Bills")
+            ForEach(checklistItems, id: \.self){
+                item in Text(item)
                 }
-                
-                Group{
-            Text("Finish Homework")
-            Text("Change internet provider")
-            Text("Read Raywenderlich.com")
-            Text("Clean the kitchen")
-            Text("Wash the car")
-                }
-            }
-            
-            Section(header: Text("Low Priority")){
-            Text("Soccer practice")
-            Text("Eat ice cream")
-            Text("Take vocal lessons")
-            Text("Record hit single")
-            Text("Learn every martial art")
-            Text("Design Custome")
-            Text("Design crime-fighting vehicle")
-            Text("Come up with super hero name")
-            Text("Befriend the space raccoon")
-            Text("Save the world")
-                
-            }
+            .onDelete(perform: deleteListItem)
+        .onMove(perform: moveListItem)
         }
-        .listStyle(GroupedListStyle())
-        .navigationBarTitle("Checklist")
+        .navigationBarItems(trailing: EditButton())
+            .navigationBarTitle("Checklist")
+            .onAppear(){
+                self.printChecklistContents()
+        }
     }
 }
+    
+    func printChecklistContents(){
+        for item in checklistItems{
+            print(item)
+        }
+    }
+    
+    func deleteListItem(whichElement: IndexSet){
+        checklistItems.remove(atOffsets: whichElement)
+        printChecklistContents()
+    }
+    
+    func moveListItem(whichElement: IndexSet, destination: Int){
+        checklistItems.move(fromOffsets: whichElement, toOffset: destination)
+        printChecklistContents()
+    }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
 }
+
 }
