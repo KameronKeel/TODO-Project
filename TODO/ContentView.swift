@@ -8,27 +8,49 @@
 
 import SwiftUI
 
+struct ChecklistItem: Identifiable{
+    let id = UUID()
+    var name: String
+    var isChecked: Bool = false
+}
+
 struct ContentView: View {
     
-    @State var checklistItems = ["Walk the dog", "Brush my teeth", "Learn iOS development", "Soccer practice", "Eat ice cream",]
+    @State var checklistItems = [ChecklistItem(name: "Walk the dog"), ChecklistItem(name: "Brush my teeth"), ChecklistItem(name: "Learn iOS development", isChecked: true), ChecklistItem(name: "Soccer practice"), ChecklistItem(name:"Eat ice cream", isChecked: true),]
     
     var body: some View {
         NavigationView{
             
         List{
-            ForEach(checklistItems, id: \.self){
-                item in Text(item)
+            ForEach(checklistItems){
+                ChecklistItem in HStack{
+                    Text(ChecklistItem.name)
+                    Spacer()
+                    Text(ChecklistItem.isChecked ? "✅" : "🔲")
                 }
+                .background(Color.white)
+                .onTapGesture{
+                    if let matchingIndex = self.checklistItems.firstIndex(where: { $0.id == ChecklistItem.id} ){
+                        self.checklistItems[matchingIndex].isChecked.toggle()
+                    }
+                    self.printChecklistContents()
+                    }
+                }
+                
             .onDelete(perform: deleteListItem)
         .onMove(perform: moveListItem)
+            
+            
         }
         .navigationBarItems(trailing: EditButton())
             .navigationBarTitle("Checklist")
             .onAppear(){
                 self.printChecklistContents()
+            
+            }
         }
     }
-}
+
     
     func printChecklistContents(){
         for item in checklistItems{
@@ -45,6 +67,7 @@ struct ContentView: View {
         checklistItems.move(fromOffsets: whichElement, toOffset: destination)
         printChecklistContents()
     }
+    
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
