@@ -20,7 +20,7 @@ struct ChecklistView: View {
             
         List{
             ForEach(checklist.items){
-                checklistItem in RowView(checklistItem: checklistItem)
+                index in RowView(checklistItem: self.$checklist.items[index])
                 }
                 
             .onDelete(perform: checklist.deleteListItem)
