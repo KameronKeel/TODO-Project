@@ -8,7 +8,7 @@
 
 import Foundation
 class Checklist: ObservableObject {
-    @Published var items = []
+    @Published var items: [ChecklistItem] = []
     
     init(){
         print("Documents directory is: \(documentsDirectory())")
